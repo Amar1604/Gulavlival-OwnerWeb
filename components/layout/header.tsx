@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Volume2, VolumeX, Store, Clock } from "lucide-react";
+import { Volume2, VolumeX, Store, Clock, Menu } from "lucide-react";
 import { audioEngine } from "@/lib/audio-alert";
 import { apiFetch } from "@/lib/api-client";
 import { RestaurantSettings } from "@/types";
+import { useNav } from "./nav-context";
 
 export function Header({ unreadCount = 0 }: { unreadCount?: number }) {
   const [isMuted, setIsMuted] = useState(false);
   const [settings, setSettings] = useState<RestaurantSettings | null>(null);
+  const { toggleMobileDrawer } = useNav();
 
   useEffect(() => {
     apiFetch<RestaurantSettings>("/settings/public")
@@ -25,18 +27,27 @@ export function Header({ unreadCount = 0 }: { unreadCount?: number }) {
   };
 
   return (
-    <header className="h-16 bg-neutral-900/80 backdrop-blur border-b border-neutral-800 px-6 flex items-center justify-between sticky top-0 z-30">
-      {/* Store Status Indicator */}
-      <div className="flex items-center space-x-3">
+    <header className="h-16 bg-neutral-900/90 backdrop-blur border-b border-neutral-800 px-3 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+      {/* Left: Mobile Menu Toggle + Store Status Indicator */}
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        <button
+          onClick={toggleMobileDrawer}
+          className="lg:hidden p-2 -ml-1 rounded-xl text-neutral-300 hover:text-white hover:bg-neutral-800 active:scale-95 transition-all"
+          aria-label="Open navigation menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
         <div
-          className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-bold border ${
+          className={`flex items-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-bold border ${
             settings?.is_open
               ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
               : "bg-red-500/10 text-red-400 border-red-500/30"
           }`}
         >
           <Store className="w-3.5 h-3.5" />
-          <span>{settings?.is_open ? "STORE OPEN" : "STORE CLOSED"}</span>
+          <span>{settings?.is_open ? "OPEN" : "CLOSED"}</span>
+          <span className="hidden sm:inline">{settings?.is_open ? "STORE" : ""}</span>
         </div>
 
         {settings && (

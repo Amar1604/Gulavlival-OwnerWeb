@@ -16,6 +16,7 @@ import {
   FileText,
   AlertTriangle,
   Receipt,
+  ArrowLeft,
 } from "lucide-react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
@@ -35,6 +36,7 @@ export default function OrderInboxPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [viewReceiptOrder, setViewReceiptOrder] = useState<Order | null>(null);
+  const [isMobileDetailView, setIsMobileDetailView] = useState(false);
   const [todayStats, setTodayStats] = useState<{
     total_orders: number;
     total_revenue: number;
@@ -198,7 +200,11 @@ export default function OrderInboxPage() {
         {/* 2-Column Counter Tablet Workspace */}
         <div className="flex-1 flex min-h-0">
           {/* LEFT COLUMN: Order List */}
-          <section className="w-full lg:w-96 xl:w-[420px] border-r border-neutral-800 flex flex-col bg-neutral-950 shrink-0">
+          <section
+            className={`w-full lg:w-96 xl:w-[420px] border-r-0 lg:border-r border-neutral-800 flex flex-col bg-neutral-950 shrink-0 ${
+              isMobileDetailView ? "hidden lg:flex" : "flex"
+            }`}
+          >
             {/* Today's Shift Counter */}
             {todayStats && (
               <div className="p-3.5 bg-neutral-900 border-b border-neutral-800 flex items-center justify-between text-xs">
@@ -268,7 +274,7 @@ export default function OrderInboxPage() {
             </div>
 
             {/* List Cards */}
-            <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
+            <div className="flex-1 overflow-y-auto p-3 space-y-2.5 pb-28 lg:pb-6">
               {loading ? (
                 <div className="py-20 text-center space-y-2">
                   <RefreshCw className="w-6 h-6 animate-spin mx-auto text-amber-500" />
@@ -290,7 +296,10 @@ export default function OrderInboxPage() {
                   return (
                     <button
                       key={order.id}
-                      onClick={() => setSelectedOrder(order)}
+                      onClick={() => {
+                        setSelectedOrder(order);
+                        setIsMobileDetailView(true);
+                      }}
                       className={`w-full text-left p-4 rounded-2xl border transition-all relative ${
                         isReceived
                           ? "bg-red-950/20 border-red-500/60 shadow-lg shadow-red-500/10 animate-pulse"
@@ -374,15 +383,31 @@ export default function OrderInboxPage() {
           </section>
 
           {/* RIGHT COLUMN: Order Detail & Actions */}
-          <main className="flex-1 bg-neutral-900/30 flex flex-col overflow-y-auto">
+          <main
+            className={`flex-1 bg-neutral-900/30 flex flex-col overflow-y-auto pb-28 lg:pb-6 ${
+              isMobileDetailView ? "flex" : "hidden lg:flex"
+            }`}
+          >
             {selectedOrder ? (
-              <div className="p-6 lg:p-8 max-w-3xl mx-auto w-full space-y-6">
+              <div className="p-3.5 sm:p-6 lg:p-8 max-w-3xl mx-auto w-full space-y-4 sm:space-y-6">
+                {/* Mobile Back Button */}
+                <div className="lg:hidden">
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileDetailView(false)}
+                    className="flex items-center space-x-2 text-xs font-bold text-amber-400 bg-neutral-900 border border-neutral-800 hover:border-amber-500/50 px-3.5 py-2.5 rounded-xl active:scale-95 transition-all shadow-sm"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>Back to Orders List</span>
+                  </button>
+                </div>
+
                 {/* Header Card */}
-                <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 shadow-xl">
-                  <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-neutral-800">
+                <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-4 sm:p-6 shadow-xl">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 sm:pb-5 border-b border-neutral-800">
                     <div>
-                      <div className="flex items-center space-x-3">
-                        <h2 className="text-xl font-extrabold text-white">
+                      <div className="flex items-center space-x-2.5 sm:space-x-3">
+                        <h2 className="text-lg sm:text-xl font-extrabold text-white">
                           Order #{selectedOrder.order_number}
                         </h2>
                         <span

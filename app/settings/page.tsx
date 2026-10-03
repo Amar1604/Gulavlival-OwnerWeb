@@ -105,7 +105,7 @@ export default function StoreSettingsPage() {
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <Header />
 
-        <div className="p-6 lg:p-8 max-w-4xl mx-auto w-full space-y-6">
+        <div className="p-3.5 sm:p-6 lg:p-8 max-w-4xl mx-auto w-full space-y-4 sm:space-y-6 pb-28 lg:pb-8">
           {/* Page Title */}
           <div>
             <h1 className="text-2xl font-extrabold text-white flex items-center space-x-2">
