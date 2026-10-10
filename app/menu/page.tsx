@@ -459,8 +459,11 @@ export default function MenuManagerPage() {
                       </div>
 
                       <div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 flex-wrap">
                           <h4 className="text-sm font-bold text-white">{item.name}</h4>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded-md">
+                            ⭐ {(item.rating || 4.5).toFixed(1)} {item.rating_count ? `(${item.rating_count})` : "(new)"}
+                          </span>
                           {!item.image_url && (
                             <span className="text-[9px] bg-neutral-800 text-amber-400 px-1.5 py-0.5 rounded-md font-medium border border-amber-500/20">
                               No photo

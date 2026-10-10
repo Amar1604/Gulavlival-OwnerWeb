@@ -52,6 +52,8 @@ export interface MenuItem {
   is_veg: boolean;
   is_available: boolean;
   is_bestseller: boolean;
+  rating?: number;
+  rating_count?: number;
 }
 
 export interface RestaurantSettings {
